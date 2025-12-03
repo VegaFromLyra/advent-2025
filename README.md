@@ -1,0 +1,1 @@
+This repo has solutions to problems from https://adventofcode.com/2025
