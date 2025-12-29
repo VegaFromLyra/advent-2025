@@ -1,11 +1,17 @@
+# https://adventofcode.com/2025/day/1 
+
 require 'net/http'
 require 'uri'
 
-def find_password
+def find_password(filename:)
     current_dial = 50
-    result = 0
+    clicks_to_0 = 0
 
-    File.foreach('input.csv') do |line|
+    puts "Current Dial: #{current_dial}"
+
+    File.foreach(filename) do |line|
+        clicks = 0
+
         line = line.strip
         next_pos = line[1..-1].to_i
 
@@ -13,13 +19,14 @@ def find_password
             raise "Bug!"
         end
 
-        puts current_dial
-        puts line
+        puts "Next position: #{line}"
 
         if line.start_with?("R")
             tmp = (current_dial + next_pos)
 
             if tmp > 99
+                clicks = (current_dial + next_pos) / 100
+
                 current_dial = (tmp - 100) % 100
             else
                 current_dial = tmp  
@@ -27,7 +34,13 @@ def find_password
         elsif line.start_with?("L")
             tmp = current_dial - next_pos
 
-            if tmp < 0
+            if tmp <= 0
+                if current_dial != 0
+                    clicks += (1 + tmp.abs / 100)
+                else
+                    clicks += tmp.abs / 100
+                end
+                
                 current_dial = (tmp + 100) % 100
             else
                 current_dial = tmp 
@@ -36,10 +49,12 @@ def find_password
             raise "Unexpected input"
         end
 
-        if current_dial == 0
-            result += 1
-        end
+        puts "Clicks to 0 to get to next position: #{clicks}"
+
+        clicks_to_0 += clicks
+
+        puts "Current Dial: #{current_dial}"
     end
 
-    result
+    clicks_to_0
 end
