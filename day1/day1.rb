@@ -1,8 +1,5 @@
 # https://adventofcode.com/2025/day/1 
 
-require 'net/http'
-require 'uri'
-
 def find_password(filename:)
     current_dial = 50
     clicks_to_0 = 0
